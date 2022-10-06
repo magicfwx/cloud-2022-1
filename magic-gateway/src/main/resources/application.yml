@@ -1,0 +1,15 @@
+server:
+  port: 8960
+  shutdown: graceful
+
+knife4j:
+  enable: true
+
+spring:
+  application:
+    name: magic-gateway-service
+  config:
+    activate:
+      on-profile:
+        - local
+

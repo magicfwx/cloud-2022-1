@@ -1,0 +1,39 @@
+knife4j:
+  enable: true
+
+server:
+  port: 8960
+
+spring:
+  application:
+    name: magic-gateway-service
+
+
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+        namespace: 706b39d6-7ae8-4ab4-9461-0aada9c5fa64
+        watch:
+          enabled: false
+        group: cloud
+      config:
+        server-addr: localhost:8848
+        namespace: 706b39d6-7ae8-4ab4-9461-0aada9c5fa64
+        file-extension: yml
+        group: cloud
+    gateway:
+      discovery:
+        locator:
+          enabled: true   #开启表示根据微服务名称映射，就是微服务名称拼接到url中可以直接访问，但是不推荐这么使用 容易暴露微服务
+          lower-case-service-id: true
+#      enabled: false  #默认开启网关true，关闭网关false
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+

@@ -1,0 +1,24 @@
+knife4j:
+  title: 业务平台one
+  enable: true
+
+server:
+  port: 8997
+
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+        namespace: 706b39d6-7ae8-4ab4-9461-0aada9c5fa64
+        watch:
+          enabled: false
+        group: cloud
+      config:
+        server-addr: localhost:8848
+        namespace: 706b39d6-7ae8-4ab4-9461-0aada9c5fa64
+        file-extension: yml
+        group: cloud
+    loadbalancer:
+      ribbon:
+        enabled: false

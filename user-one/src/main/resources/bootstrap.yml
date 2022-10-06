@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: magic-user-service
+
+
+feign:
+  httpclient:
+    enabled: false
+  okhttp:
+    enabled: true
+  client:
+    config:
+      default:
+        connect-timeout: 5000
+        read-timeout: 5000
+        loggerLevel: full

@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: magic-gateway-service
+  main:
+    allow-circular-references: true
+    lazy-initialization: true
+
+
+server:
+  port: 8960

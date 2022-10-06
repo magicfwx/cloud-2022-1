@@ -1,0 +1,11 @@
+knife4j:
+  title: 业务平台two
+
+spring:
+  application:
+    name: magic-business-service
+  config:
+    activate:
+      on-profile:
+        - local
+

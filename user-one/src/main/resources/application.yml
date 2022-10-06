@@ -1,0 +1,11 @@
+knife4j:
+  title: 用户平台one
+
+spring:
+  application:
+    name: magic-user-service
+  config:
+    activate:
+      on-profile:
+        - local
+
