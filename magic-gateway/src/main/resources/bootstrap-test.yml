@@ -1,0 +1,68 @@
+spring:
+
+  # redis:
+  #   database: 0
+  #   lettuce:
+  #     pool:
+  #       max-active: 8 #最大连接数量
+  #       max-wait: -1 #连接池最大阻塞等待时间（使用负值表示没有限制）x
+  #       max-idle: 8 #最大空闲数量
+  #       min-idle: 0 #最小空闲数量
+  #   cluster:
+  #     nodes:
+  #       - 192.168.29.115:7000
+
+  #     max-redirects: 3 #重新连接的最大数量
+  #   # host: 127.0.0.1
+  #   # port: 6379
+  #   password: #默认为空
+  #   timeout: 60000 #连接超时时间 ms
+  cloud:
+    gateway:
+      routes:
+        - id: magic_business
+          order: 0
+          uri: lb://magic-business-service
+          predicates:
+            - Path=/magic-business-service/api/V1/**
+            # - Path=/magic-business-service/**
+            # - Path=/api/V1/**
+
+        - id: magic_user
+          order: 1
+          uri: lb://magic-user-service
+          predicates:
+            - Path=/magic-user-service/api/V1/**
+    #向sentinel控制台注册服务
+    sentinel:
+      transport:
+        dashboard: localhost:8080
+        pord: 8877
+        clientIp: localhost
+      eager: true
+      filter:
+        enabled: true
+
+feign:
+  okhttp:
+    enabled: true
+  httpclient:
+    enabled: false
+    max-connections: 500
+    connection-timeout: 5000
+  sentinel:
+    enabled: true
+
+#logback日志参数
+logback:
+  path: ./logs
+  zip.path: ./logs/zip
+  maxFileSize: 1GB
+  maxHistory: 180
+  totalSizeCap: 10GB
+  level: INFO
+
+auth:
+  enable: true
+  ignoreUrl: 
+    

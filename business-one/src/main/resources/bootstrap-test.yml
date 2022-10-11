@@ -1,0 +1,187 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.29.102:3306/dkh?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2b8
+    username: dkh
+    password: Dws,1227Ud
+    druid:
+      initial-size: 1                     #连接池初始大小
+      max-active: 20                      #连接池中最大的活跃连接数
+      min-idle: 1                         #连接池中最小的活跃连接数
+      max-wait: 60000                     #配置获取连接等待超时的时间
+  jpa:
+    show-sql: false
+    properties:
+      hibernate:
+        naming:
+          physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+          # session_factory:
+          # statement_inspector: com.haobai.hangup.business.config.web.MyJPAInterceptor
+
+  #redis默认配置/
+  redis:
+    database: 0
+    lettuce:
+      pool:
+        max-active: 8 #最大连接数量
+        max-wait: -1 #连接池最大阻塞等待时间（使用负值表示没有限制）x
+        max-idle: 8 #最大空闲数量
+        min-idle: 0 #最小空闲数量
+    cluster:
+      nodes:
+        - 192.168.29.115:7000
+
+      max-redirects: 3 #重新连接的最大数量
+    # host: 127.0.0.1
+    # port: 6379
+    password: #默认为空
+    timeout: 60000 #连接超时时间 ms
+  cloud:
+    #向sentinel控制台注册服务
+    sentinel:
+      transport:
+        dashboard: localhost:8080
+        pord: 8877
+        clientIp: localhost
+      eager: true
+      # datasource:
+      #   ds:
+      #     nacos:
+      #       server-addr: 192.168.29.111:8848
+      #       group-id: SENTINEL_GROUP
+      #       rule-type: flow
+      #       data-id: hangup-business-service-flow-rules
+      #       data-type: json
+    stream:
+      bindings:
+        #        my_output:
+        #          binder: rocketmq
+        #          destination: D2_MQ_business-cloud-card
+        #        my_input:
+        #          binder: rocketmq
+        #          destination: D2_MQ_business-cloud-card
+        #          group: D2_MQ_business-cloud-card_G_C_card
+
+        upload_video_output:
+          binder: rocketmq
+          destination: D2_MQ_business-cloud-card-video-dev
+        upload_video_callback_input:
+          binder: rocketmq
+          destination: D2_MQ_business-cloud-card-video-callback-dev
+          group: D2_MQ_business-cloud-card_v_c_card-dev
+        # count_record_receiver_input:
+        #   binder: rocketmq
+        #   destination: ClOUD_HANGUP_COUNT_NUMBER_RECORD_DEV
+        #   group: D2_MQ_business-cloud-n-c-dev
+
+        place_order_output:
+          binder: rocketmq
+          destination: D2_MQ_hangup-business-service_place_order
+        place_order_input:
+          binder: rocketmq
+          destination: D2_MQ_hangup-business-service_place_order
+          group: D2_MQ_hangup-business-service_G_C_place_order
+
+        unsubscribe_order_output:
+          binder: rocketmq
+          destination: D2_MQ_hangup-business-service_unsubscribe_order
+        unsubscribe_order_input:
+          binder: rocketmq
+          destination: D2_MQ_hangup-business-service_unsubscribe_order
+          group: D2_MQ_hangup-business-service_G_C_unsubscribe_order
+
+      rocketmq:
+        binder:
+          # name-server: 192.168.133.28:9001,192.168.133.27:9001
+          name-server: 192.168.29.113:9876
+          access-key: D2_business-cloud-card
+          secret-key: PzTkT3pk
+#feign调用
+feign:
+  okhttp:
+    enabled: true
+  httpclient:
+    enabled: false
+    max-connections: 500
+    connection-timeout: 5000
+  sentinel:
+    enabled: true
+
+#rocketmq 配置信息
+#rocketmq:
+#  name-server: 192.168.133.28:9001,192.168.133.27:9001 #访问地址
+#  #生产者配置
+#  producer:
+#    group: #组名
+#    #目的地（topic:tag）
+#    #topic
+#    topic:
+
+#logback日志参数
+logback:
+  path: ./logs
+  zip.path: ./logs/zip
+  maxFileSize: 1GB
+  maxHistory: 180
+  totalSizeCap: 10GB
+  level: INFO
+
+
+
+#配置定时任务执行时间(cron表达式)
+schedules:
+  runBatch: 0 */1 * * * ?
+  order: true
+handout:
+  sneIP: http://localhost:8080
+  sendUrl: /order/
+
+
+hangup:
+  server:
+    template:
+      url: http://127.0.0.1:8985/hangup-message-template-service/
+    transfer:
+      url: http://10.146.28.32/hangup-transfer-service
+    ability:
+      url: http://127.0.0.1:8982/hangup-ability-service
+      signalling_notify_url: http://10.6.54.60:8081/interface
+    count:
+      url: http://10.146.28.32/hangup-count-service
+    user:
+      url:  http://127.0.0.1:8990/hangup-user-service
+    file:
+      url:  http://127.0.0.1:8990/hangup-user-service
+  openService:
+    business_platform: http://prod-gateway.bst.com/business-platform-service
+    video_storage: http://192.168.19.42:58080/uat-gateway-service/video-storage-service
+  other:
+    # shortUrl: http://192.168.184.83:1128/sms-short-link/
+    shortUrl: http://10.146.28.32/sms-short-link.d02.bst/api/v1
+    mapLongUrl: http://192.168.184.83:8030/findByMapCode?mapCode=
+    bussinessLongUrl: http://192.168.184.83:8030/findByMapCode?mapCode=
+    templateAuditUrl: http://192.168.184.83:8080/bstcrm_action/shortLink/toAcceptBussiness
+    shortMapNumber: 4
+    shortBussNumber: 5
+    template:
+      url: http://192.168.19.42:58080/besttone_template_action/
+  deduction:
+    url: http://192.168.29.114:1111/
+  bigData:
+    url: http://192.168.184.55:9998/spring_data_hbase/
+    spPwd: WdGvl3
+xl:
+  subscriberId: 9
+  appId: 113271bdeb24460983093335c0e79d2c
+  appSecret: 7d868546771b4e78af347f7e012b3328
+  appDataSecret: 123456
+  appIdSDR: 13e9e0c52d0043469a5fa61e90433b70
+  subscriberIdSDR: 11
+  appSecretSDR: be15a46ba0244fdcae66879a3a4c0337
+  endpoint:
+    sh: http://10.6.54.163:1800/orderSignalling/
+constants:
+  shortLink:
+    url: http://m.e114.so/
+video:
+  defaultId: 5135135
